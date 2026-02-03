@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasAuditFields;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MstProduk extends Model
 {
-    use HasFactory, HasUuids, SoftDeletes;
+    use HasFactory, HasUuids, SoftDeletes, HasAuditFields;
 
     protected $table = 'mst_produk';
     protected $primaryKey = 'product_id';

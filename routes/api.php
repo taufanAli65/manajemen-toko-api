@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\ProductController;
+use App\Http\Controllers\Api\V1\TokoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,28 +20,50 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->group(function () {
     
     // Public routes
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/auth/login', [AuthController::class, 'login']);
 
     // Protected routes (require JWT authentication)
     Route::middleware('jwt.auth')->group(function () {
         
-        // Auth routes
-        Route::post('/logout', [AuthController::class, 'logout']);
-        Route::get('/me', [AuthController::class, 'me']);
-
-        // Example: Superadmin only routes
+        // Superadmin only routes
         Route::middleware('role:superadmin')->group(function () {
-            // Add superadmin-only routes here
+            Route::get('/auth/users', [AuthController::class, 'listUsers']);
+            
+            // Toko management
+            Route::post('/toko', [TokoController::class, 'store']);
+            Route::put('/toko/{toko_id}', [TokoController::class, 'update']);
+            Route::delete('/toko/{toko_id}', [TokoController::class, 'destroy']);
         });
 
-        // Example: Admin and Superadmin routes
+        // Admin and Superadmin routes
         Route::middleware('role:superadmin,admin')->group(function () {
-            // Add admin routes here
+            Route::post('/auth/register', [AuthController::class, 'register']);
+            
+            // Toko management
+            Route::get('/toko', [TokoController::class, 'index']);
+            Route::post('/toko/{toko_id}/assign', [TokoController::class, 'assignUser']);
+            Route::delete('/toko/{toko_id}/users/{user_id}', [TokoController::class, 'removeUser']);
+            Route::get('/toko/{toko_id}/users', [TokoController::class, 'listUsers']);
+            
+            // Product management
+            Route::post('/products', [ProductController::class, 'store']);
+            Route::put('/products/{product_id}', [ProductController::class, 'update']);
+            Route::delete('/products/{product_id}', [ProductController::class, 'destroy']);
         });
 
-        // Example: All authenticated users (superadmin, admin, kasir)
+        // All authenticated users (superadmin, admin, kasir)
         Route::middleware('role:superadmin,admin,kasir')->group(function () {
-            // Add routes accessible by all roles here
+            Route::post('/auth/logout', [AuthController::class, 'logout']);
+            Route::get('/auth/me', [AuthController::class, 'me']);
+            Route::put('/auth/users/{user_id}', [AuthController::class, 'update']);
+            
+            // Toko access
+            Route::get('/toko/{toko_id}', [TokoController::class, 'show']);
+            Route::get('/my-toko', [TokoController::class, 'myTokos']);
+            
+            // Product access
+            Route::get('/products', [ProductController::class, 'index']);
+            Route::get('/products/{product_id}', [ProductController::class, 'show']);
         });
     });
 });

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\UserRole;
+use App\Traits\HasAuditFields;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -14,7 +15,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class MstUser extends Authenticatable implements JWTSubject
 {
-    use HasFactory, Notifiable, HasUuids, SoftDeletes;
+    use HasFactory, Notifiable, HasUuids, SoftDeletes, HasAuditFields;
 
     protected $table = 'mst_user';
     protected $primaryKey = 'user_id';

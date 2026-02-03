@@ -65,4 +65,23 @@ class AuthService
             return false;
         }
     }
+
+    public function register(array $data)
+    {
+        $data['password'] = Hash::make($data['password']);
+        return $this->userRepository->create($data);
+    }
+
+    public function updateUser(string $userId, array $data)
+    {
+        if (isset($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        }
+        return $this->userRepository->update($userId, $data);
+    }
+
+    public function listUsers(?string $role = null, ?string $tokoId = null, int $perPage = 10)
+    {
+        return $this->userRepository->listUsers($role, $tokoId, $perPage);
+    }
 }
