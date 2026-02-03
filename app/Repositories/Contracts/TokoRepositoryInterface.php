@@ -4,7 +4,7 @@ namespace App\Repositories\Contracts;
 
 use App\Models\MapUserToko;
 
-interface TokoRepository
+interface TokoRepositoryInterface
 {
     /**
      * Assign a toko to a user.

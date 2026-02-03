@@ -107,7 +107,7 @@ class TransactionService
      */
     public function getUserTokoIds($user): array
     {
-        return $user->tokos()->pluck('toko_id')->toArray();
+        return $user->tokos()->pluck('mst_toko.toko_id')->toArray();
     }
 
     /**
@@ -119,7 +119,7 @@ class TransactionService
      */
     public function userHasAccessToToko($user, string $tokoId): bool
     {
-        return $user->tokos()->where('toko_id', $tokoId)->exists();
+        return $user->tokos()->where('mst_toko.toko_id', $tokoId)->exists();
     }
 
     /**

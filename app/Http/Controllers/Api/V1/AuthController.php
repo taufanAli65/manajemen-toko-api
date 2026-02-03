@@ -85,21 +85,24 @@ class AuthController extends Controller
     public function register(RegisterRequest $request): UserResource
     {
         $userRole = $request->auth_user->role;
-        if ($userRole == 'superadmin') {
+        // Handle Enum scenario if role is casted to Enum
+        $roleValue = $userRole instanceof \App\Enums\UserRole ? $userRole->value : $userRole;
+
+        if ($roleValue === 'superadmin') {
             $user = $this->authService->register($request->only([
-            'full_name',
-            'email',
-            'password',
-            'role',
-        ]));
+                'full_name',
+                'email',
+                'password',
+                'role',
+            ]));
         } else {
-            $user = $this->authService->register($request->only([
-            'full_name',
-            'email',
-            'password',
-        ]));    
-            $user->role = 'kasir';
-            $user->save();
+            $data = $request->only([
+                'full_name',
+                'email',
+                'password',
+            ]);
+            $data['role'] = 'kasir';
+            $user = $this->authService->register($data);
         }
 
         return new UserResource($user);
@@ -116,6 +119,7 @@ class AuthController extends Controller
     {
         $authUser = $request->auth_user;
         $userRole = $authUser->role;
+        $roleValue = $userRole instanceof \App\Enums\UserRole ? $userRole->value : $userRole;
 
         $data = $request->only([
             'full_name',
@@ -124,17 +128,22 @@ class AuthController extends Controller
             'role',
         ]);
 
-        if ($authUser->user_id !== $user_id && !in_array($userRole, ['superadmin', 'admin'])) {
+        if ($authUser->user_id !== $user_id && !in_array($roleValue, ['superadmin', 'admin'])) {
             return response()->json([
                 'message' => 'Forbidden: You can only update your own profile'
             ], 403);
         }
 
-        if ($userRole == 'superadmin') {
-            $data->role = $request->input('role', null);
-        } else if ($userRole == 'admin') {
-            $data->role = 'kasir';
+        if ($roleValue == 'superadmin') {
+            $data['role'] = $request->input('role', null);
+        } else if ($roleValue == 'admin') {
+            $data['role'] = 'kasir';
         } else {
+            unset($data['role']);
+        }
+
+        // Filter out null role if it wasn't set or unset
+        if (array_key_exists('role', $data) && is_null($data['role'])) {
             unset($data['role']);
         }
 

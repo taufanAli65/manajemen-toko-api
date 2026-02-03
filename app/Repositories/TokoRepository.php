@@ -185,6 +185,7 @@ class TokoRepository implements TokoRepositoryInterface
         }
         $toko->is_deleted = true;
         $toko->save();
+        $toko->delete();
         return true;
     }
 }

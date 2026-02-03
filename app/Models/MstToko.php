@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MstToko extends Model
 {
-    use HasFactory, HasUuids, SoftDeletes;
+    use HasFactory, HasUuids, SoftDeletes, \App\Traits\HasAuditFields;
 
     protected $table = 'mst_toko';
     protected $primaryKey = 'toko_id';

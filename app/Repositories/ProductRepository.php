@@ -99,6 +99,7 @@ class ProductRepository implements ProductRepositoryInterface
         
         $product->is_deleted = true;
         $product->save();
+        $product->delete();
         return true;
     }
 }
