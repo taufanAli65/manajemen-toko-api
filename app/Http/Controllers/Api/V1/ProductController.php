@@ -29,7 +29,8 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->input('per_page', 10);
-        $products = $this->productService->listAllProducts($perPage);
+        $search = $request->input('search');
+        $products = $this->productService->listAllProducts($perPage, $search);
         
         return ProductResource::collection($products);
     }

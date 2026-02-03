@@ -80,9 +80,10 @@ class UserRepository implements UserRepositoryInterface
      * @param string|null $role
      * @param string|null $tokoId
      * @param int $perPage
+     * @param string|null $search
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function listUsers(?string $role = null, ?string $tokoId = null, int $perPage = 10)
+    public function listUsers(?string $role = null, ?string $tokoId = null, int $perPage = 10, ?string $search = null)
     {
         $query = MstUser::query()
             ->select('mst_user.user_id', 'mst_user.full_name', 'mst_user.email', 'mst_user.role')
@@ -96,6 +97,13 @@ class UserRepository implements UserRepositoryInterface
             $query->join('map_user_toko', 'mst_user.user_id', '=', 'map_user_toko.user_id')
                 ->where('map_user_toko.toko_id', $tokoId)
                 ->distinct();
+        }
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('mst_user.full_name', 'LIKE', "%{$search}%")
+                  ->orWhere('mst_user.email', 'LIKE', "%{$search}%");
+            });
         }
 
         return $query->paginate($perPage);

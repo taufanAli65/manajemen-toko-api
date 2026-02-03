@@ -31,7 +31,8 @@ class TokoController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->input('per_page', 10);
-        $tokos = $this->tokoService->listAllTokos($perPage);
+        $search = $request->input('search');
+        $tokos = $this->tokoService->listAllTokos($perPage, $search);
         
         return TokoResource::collection($tokos);
     }
@@ -169,7 +170,8 @@ class TokoController extends Controller
     public function listUsers(Request $request, string $tokoId)
     {
         $perPage = $request->input('per_page', 10);
-        $users = $this->tokoService->listUsersByToko($tokoId, $perPage);
+        $search = $request->input('search');
+        $users = $this->tokoService->listUsersByToko($tokoId, $perPage, $search);
         
         return UserResource::collection($users);
     }
@@ -185,8 +187,9 @@ class TokoController extends Controller
     {
         $authUser = $request->auth_user;
         $perPage = $request->input('per_page', 10);
+        $search = $request->input('search');
         
-        $tokos = $this->tokoService->listTokosByUser($authUser->user_id, $perPage);
+        $tokos = $this->tokoService->listTokosByUser($authUser->user_id, $perPage, $search);
         
         return TokoResource::collection($tokos);
     }

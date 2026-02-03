@@ -18,6 +18,20 @@ class CreateTokoRequest extends FormRequest
             'name' => 'required|string|max:255',
             'address' => 'required|string',
             'jenis_toko' => ['required', Rule::in(['pusat', 'cabang', 'retail'])],
+            'admin_email' => 'required|email|unique:mst_user,email',
+            'kasir_email' => 'required|email|unique:mst_user,email',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'admin_email.required' => 'Admin email is required',
+            'admin_email.email' => 'Admin email must be a valid email address',
+            'admin_email.unique' => 'Admin email already exists',
+            'kasir_email.required' => 'Kasir email is required',
+            'kasir_email.email' => 'Kasir email must be a valid email address',
+            'kasir_email.unique' => 'Kasir email already exists',
         ];
     }
 }

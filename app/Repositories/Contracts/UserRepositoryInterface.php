@@ -41,11 +41,17 @@ interface UserRepositoryInterface
 
     /**
      * List all users based on role and toko.
+     * Supports filtering by:
+     * - All users (no filters)
+     * - By role only
+     * - By toko only
+     * - By both role and toko
      * 
      * @param string|null $role
      * @param string|null $tokoId
      * @param int $perPage
+     * @param string|null $search
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function listUsers(?string $role = null, ?string $tokoId = null, int $perPage = 10);
+    public function listUsers(?string $role = null, ?string $tokoId = null, int $perPage = 10, ?string $search = null);
 }

@@ -80,8 +80,17 @@ class AuthService
         return $this->userRepository->update($userId, $data);
     }
 
-    public function listUsers(?string $role = null, ?string $tokoId = null, int $perPage = 10)
+    /**
+     * List all users.
+     *
+     * @param string|null $role
+     * @param string|null $tokoId
+     * @param int $perPage
+     * @param string|null $search
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function listUsers(?string $role = null, ?string $tokoId = null, int $perPage = 10, ?string $search = null)
     {
-        return $this->userRepository->listUsers($role, $tokoId, $perPage);
+        return $this->userRepository->listUsers($role, $tokoId, $perPage, $search);
     }
 }

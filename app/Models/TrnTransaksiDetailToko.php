@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasAuditFields;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TrnTransaksiDetailToko extends Model
 {
-    use HasFactory, HasUuids, SoftDeletes;
+    use HasFactory, HasUuids, SoftDeletes, HasAuditFields;
 
     protected $table = 'trn_transaksi_detail_toko';
     protected $primaryKey = 'id';

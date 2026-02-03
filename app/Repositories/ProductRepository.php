@@ -11,11 +11,21 @@ class ProductRepository implements ProductRepositoryInterface
      * List all products.
      * 
      * @param int $perPage
+     * @param string|null $search
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function listAllProducts(int $perPage = 10)
+    public function listAllProducts(int $perPage = 10, ?string $search = null)
     {
-        return MstProduk::where('is_deleted', false)->paginate($perPage);
+        $query = MstProduk::where('is_deleted', false);
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('merk', 'LIKE', "%{$search}%");
+            });
+        }
+
+        return $query->paginate($perPage);
     }
 
     /**

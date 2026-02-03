@@ -43,14 +43,23 @@ class TokoRepository implements TokoRepositoryInterface
      *
      * @param string $userId
      * @param int $perPage
+     * @param string|null $search
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function listTokoByUser(string $userId, int $perPage = 10)
+    public function listTokoByUser(string $userId, int $perPage = 10, ?string $search = null)
     {
-        return MapUserToko::join('mst_toko', 'map_user_toko.toko_id', '=', 'mst_toko.toko_id')
+        $query = MapUserToko::join('mst_toko', 'map_user_toko.toko_id', '=', 'mst_toko.toko_id')
             ->where('map_user_toko.user_id', $userId)
-            ->where('mst_toko.is_deleted', false)
-            ->select(
+            ->where('mst_toko.is_deleted', false);
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('mst_toko.name', 'LIKE', "%{$search}%")
+                  ->orWhere('mst_toko.address', 'LIKE', "%{$search}%");
+            });
+        }
+
+        return $query->select(
                 'mst_toko.name', 
                 'mst_toko.address', 
                 'mst_toko.jenis_toko',
@@ -64,14 +73,23 @@ class TokoRepository implements TokoRepositoryInterface
      * 
      * @param string|null $tokoId
      * @param int $perPage
+     * @param string|null $search
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function listUserByToko(?string $tokoId = null, int $perPage = 10)
+    public function listUserByToko(?string $tokoId = null, int $perPage = 10, ?string $search = null)
     {
-        return MapUserToko::join('mst_user', 'map_user_toko.user_id', '=', 'mst_user.user_id')
+        $query = MapUserToko::join('mst_user', 'map_user_toko.user_id', '=', 'mst_user.user_id')
             ->where('map_user_toko.toko_id', $tokoId)
-            ->where('mst_user.is_deleted', false)
-            ->select(
+            ->where('mst_user.is_deleted', false);
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('mst_user.full_name', 'LIKE', "%{$search}%")
+                  ->orWhere('mst_user.email', 'LIKE', "%{$search}%");
+            });
+        }
+
+        return $query->select(
                 'mst_user.user_id',
                 'mst_user.full_name',
                 'mst_user.role'
@@ -83,11 +101,21 @@ class TokoRepository implements TokoRepositoryInterface
      * List all tokos.
      * 
      * @param int $perPage
+     * @param string|null $search
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function listAllTokos(int $perPage = 10)
+    public function listAllTokos(int $perPage = 10, ?string $search = null)
     {
-        return MstToko::where('is_deleted', false)->paginate($perPage);
+        $query = MstToko::where('is_deleted', false);
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('address', 'LIKE', "%{$search}%");
+            });
+        }
+
+        return $query->paginate($perPage);
     }
 
     /**

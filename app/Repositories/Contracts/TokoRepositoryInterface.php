@@ -29,26 +29,29 @@ interface TokoRepository
      *
      * @param string $userId
      * @param int $perPage
+     * @param string|null $search
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function listTokoByUser(string $userId, int $perPage = 10);
+    public function listTokoByUser(string $userId, int $perPage = 10, ?string $search = null);
 
     /**
      * List all users based on toko.
      * 
      * @param string|null $tokoId
      * @param int $perPage
+     * @param string|null $search
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function listUserByToko(?string $tokoId = null, int $perPage = 10);
+    public function listUserByToko(?string $tokoId = null, int $perPage = 10, ?string $search = null);
 
     /**
      * List all tokos.
      * 
      * @param int $perPage
+     * @param string|null $search
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function listAllTokos(int $perPage = 10);
+    public function listAllTokos(int $perPage = 10, ?string $search = null);
 
     /**
      * Create a new toko.

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\TokoController;
+use App\Http\Controllers\Api\V1\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -64,6 +65,13 @@ Route::prefix('v1')->group(function () {
             // Product access
             Route::get('/products', [ProductController::class, 'index']);
             Route::get('/products/{product_id}', [ProductController::class, 'show']);
+            
+            // Transaction creation (all authenticated users)
+            Route::post('/transactions', [TransactionController::class, 'store']);
+            
+            // Transaction listing and summary (role-based filtering applied in controller)
+            Route::get('/transactions', [TransactionController::class, 'index']);
+            Route::get('/transactions/summary', [TransactionController::class, 'summary']);
         });
     });
 });

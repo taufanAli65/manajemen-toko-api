@@ -17,11 +17,12 @@ class ProductService
      * List all products.
      * 
      * @param int $perPage
+     * @param string|null $search
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function listAllProducts(int $perPage = 10)
+    public function listAllProducts(int $perPage = 10, ?string $search = null)
     {
-        return $this->productRepository->listAllProducts($perPage);
+        return $this->productRepository->listAllProducts($perPage, $search);
     }
 
     /**

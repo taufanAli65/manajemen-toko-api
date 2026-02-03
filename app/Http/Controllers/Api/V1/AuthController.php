@@ -154,8 +154,9 @@ class AuthController extends Controller
         $perPage = $request->input('per_page', 10);
         $role = $request->input('role');
         $tokoId = $request->input('toko_id');
+        $search = $request->input('search');
         
-        $users = $this->authService->listUsers($role, $tokoId, $perPage);
+        $users = $this->authService->listUsers($role, $tokoId, $perPage, $search);
         
         return UserResource::collection($users);
     }
